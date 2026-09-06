@@ -10,8 +10,10 @@ export class User {
     })
     email!: string;
 
-    @Column('text')
-    password?: string;
+    @Column('text', {
+        select: false, // para que no se devuelva el password en la respuesta
+    })
+    password!: string;
 
     @Column('text')
     fullName!: string;

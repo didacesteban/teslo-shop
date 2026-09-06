@@ -1,9 +1,10 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -20,13 +21,28 @@ export class AuthService {
         password: bcrypt.hashSync(password, 10),
       });
       await this.userRepository.save(user);
-      delete user.password; // para que no se devuelva el password en la respuesta
-      return user;
+      return { email: user.email, fullName: user.fullName };
       // TODO: Return JWT
     } catch (error) {
       this.handleDBErrors(error);
     }
 
+  }
+
+  async login(loginUserDto: LoginUserDto) {
+    const { email, password } = loginUserDto;
+    const user = await this.userRepository.findOne({
+      where: { email },
+      select: { email: true, password: true }, // indicamos que queremos seleccionar solo el email y el password
+    });
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    if(!bcrypt.compareSync(password, user.password)) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    return user;
+    // TODO: retornar JWT
   }
 
   // ponemos never ya que nunca va a retornar nada porque estamos lanzando una excepción
