@@ -1,0 +1,14 @@
+info:
+  name: Get product by term
+  type: http
+
+http:
+  method: GET
+  url: http://localhost:3000/api/products/:term
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

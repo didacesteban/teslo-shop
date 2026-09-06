@@ -1,0 +1,27 @@
+info:
+  name: Create product
+  type: http
+
+http:
+  method: POST
+  url: http://localhost:3000/api/products
+  auth: inherit
+
+body:
+  mode: json
+  json: |
+    {
+      "title": "New Product",
+      "price": 100,
+      "description": "Product description",
+      "stock": 10,
+      "sizes": ["XS", "S", "M", "L"],
+      "gender": "unisex",
+      "tags": ["shirt"]
+    }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

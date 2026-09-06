@@ -1,0 +1,23 @@
+info:
+  name: Update product
+  type: http
+
+http:
+  method: PATCH
+  url: http://localhost:3000/api/products/:id
+  auth: inherit
+
+body:
+  mode: json
+  json: |
+    {
+      "title": "Updated Product",
+      "price": 120,
+      "stock": 15
+    }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
