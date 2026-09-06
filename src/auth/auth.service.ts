@@ -27,7 +27,7 @@ export class AuthService {
       return { 
         email: user.email, 
         fullName: user.fullName, 
-        token: this.getJwtToken({ email: user.email }) 
+        token: this.getJwtToken({ id: user.id }) 
       };
     } catch (error) {
       this.handleDBErrors(error);
@@ -39,7 +39,7 @@ export class AuthService {
     const { email, password } = loginUserDto;
     const user = await this.userRepository.findOne({
       where: { email },
-      select: { email: true, password: true }, // indicamos que queremos seleccionar solo el email y el password
+      select: { email: true, password: true, id: true }, // indicamos que queremos seleccionar solo el email, el password y el id
     });
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
@@ -47,7 +47,7 @@ export class AuthService {
     if (!bcrypt.compareSync(password, user.password)) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    return { ...user, token: this.getJwtToken({ email: user.email }) };
+    return { ...user, token: this.getJwtToken({ id: user.id }) };
   }
 
   private getJwtToken(payload: JwtPayload) {
