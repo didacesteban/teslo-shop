@@ -1,24 +1,41 @@
 info:
   name: Create product
   type: http
+  seq: 1
 
 http:
   method: POST
   url: http://localhost:3000/api/products
-  auth: inherit
-
-body:
-  mode: json
-  json: |
-    {
-      "title": "New Product",
-      "price": 100,
-      "description": "Product description",
-      "stock": 10,
-      "sizes": ["XS", "S", "M", "L"],
-      "gender": "unisex",
-      "tags": ["shirt"]
-    }
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Men's Chill Crew Neck Sweatshirt",
+        "price": 75,
+        "description": "The best cotton, heavyweight sweatshirt with a soft brushed interior.",
+        "slug": "mens_chill_crew_neck_sweatshirt",
+        "stock": 7,
+        "sizes": [
+          "XS",
+          "S",
+          "M",
+          "L",
+          "XL",
+          "XXL"
+        ],
+        "gender": "man",
+        "tags": [
+          "sweatshirt",
+          "cotton"
+        ],
+        "images": [
+          "1740176-00-A_0_2000.jpg",
+          "1740176-00-A_1.jpg"
+        ]
+      }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZhOGQ1NGEzLWUwNTQtNDE1My1hYTBmLWRjZjU3YzMyNDc5OCIsImlhdCI6MTc4OTA1MDc3MiwiZXhwIjoxNzg5MDU3OTcyfQ.9s1FzWLk2AYPux9ltKU7J3P-Lz11T9oMxtoVVvIDx-E
 
 settings:
   encodeUrl: true

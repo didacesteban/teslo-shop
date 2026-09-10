@@ -7,6 +7,7 @@ import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { validate as isUUID } from 'uuid';
 import { Product, ProductImage } from './entities';
 import { DataSource } from 'typeorm';
+import { User } from 'src/auth/entities/user.entity';
 
 @Injectable()
 export class ProductsService {
@@ -25,7 +26,7 @@ export class ProductsService {
     private readonly dataSource: DataSource,
   ) { }
 
-  async create(createProductDto: CreateProductDto) {
+  async create(createProductDto: CreateProductDto, user: User) {
 
     try {
 
@@ -47,7 +48,8 @@ export class ProductsService {
       // esto solo lo crea, crea nuestra instancia del producto con las propiedades necesarias que llegan del dto
       const product = this.productRepository.create({
         ...productDetails,
-        images: images.map(image => this.productImageRepository.create({ url: image }))
+        images: images.map(image => this.productImageRepository.create({ url: image })),
+        user
       });
 
       // este save ahora salva tanto el producto como las imagenes
@@ -108,7 +110,7 @@ export class ProductsService {
     return { ...product, images: product.images?.map(image => image.url) };
   }
 
-  async update(id: string, updateProductDto: UpdateProductDto) {
+  async update(id: string, updateProductDto: UpdateProductDto, user: User) {
     const { images, ...toUpdate } = updateProductDto;
 
     // Le decimos a typeORm: Busca un producto por id y colocale las propiedades del DTO, no actualiza pero prepara para la actualizacion
@@ -137,6 +139,7 @@ export class ProductsService {
         product.images = images.map(image => this.productImageRepository.create({ url: image }))
       }
 
+      product.user = user;
       // ahora guardamos el producto pero aun no se ha hecho el commit
       await queryRunner.manager.save(product);
 
